@@ -42,13 +42,14 @@ export default class App extends Component {
                 }
             ],
             term: '',
-            filter: ''
+            filter: 'all'
         };
         this.deleteItem = this.deleteItem.bind(this);
         this.addItem = this.addItem.bind(this);
         this.onToggleImportant = this.onToggleImportant.bind(this);
         this.onToggleLiked = this.onToggleLiked.bind(this);
         this.onUpdateSearch = this.onUpdateSearch.bind(this);
+        this.onFilterSelect = this.onFilterSelect.bind(this);
 
         this.maxId = 4;
     }
@@ -134,6 +135,10 @@ export default class App extends Component {
     onUpdateSearch(term) {
         this.setState({term});
     }
+
+    onFilterSelect(filter) {
+        this.setState({filter});
+    }
  
     render() {
         const {data, term, filter} = this.state;
@@ -141,7 +146,7 @@ export default class App extends Component {
         const liked = data.filter(item => item.like).length;
         const allPosts = this.state.data.length;
 
-        const visiblePost = this.searchPost(data, term);
+        const visiblePost = this.filterPost(this.searchPost(data, term), filter);
 
         return (
             <AppBlock>
@@ -153,7 +158,10 @@ export default class App extends Component {
                     <SearchPanel
                         onUpdateSearch={this.onUpdateSearch}
                     />
-                    <PostStatusFilter/>
+                    <PostStatusFilter
+                        filter={filter}
+                        onFilterSelect={this.onFilterSelect}
+                    />
                 </div>
                 <PostList 
                     posts={visiblePost}
